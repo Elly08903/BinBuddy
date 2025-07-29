@@ -18,6 +18,16 @@
         android:textColor="#0D47A1"
         android:layout_marginBottom="24dp" />
 
+    <Button
+        android:id="@+id/exStore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#3F51B5"
+        android:text="Example Store"
+        android:textColor="#FFFFFF" />
+
     <!-- Placeholder for more store-related content -->
     <TextView
         android:layout_width="wrap_content"

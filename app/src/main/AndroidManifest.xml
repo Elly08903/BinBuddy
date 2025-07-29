@@ -24,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".StoreActivity" />
+        <activity android:name=".ItemsActivity" />
         <activity android:name=".ItemDetailActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SettingsActivity" />
