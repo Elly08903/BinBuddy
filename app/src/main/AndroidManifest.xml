@@ -25,6 +25,8 @@
         </activity>
         <activity android:name=".StoreActivity" />
         <activity android:name=".ItemDetailActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".SettingsActivity" />
 
     </application>
 
