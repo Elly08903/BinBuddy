@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "name": "Downtown Market",
+    "aisles": ["Dairy", "Bakery", "Produce"]
+  },
+  {
+    "id": 2,
+    "name": "Neighborhood Shop",
+    "aisles": ["Frozen", "Snacks", "Beverages"]
+  }
+]
