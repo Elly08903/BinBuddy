@@ -8,12 +8,44 @@
     android:layout_marginBottom="12dp"
     android:background="#DDEAFE">
 
+    <!-- Item Name -->
     <TextView
-        android:id="@+id/itemNameText"
+        android:id="@+id/itemName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Item Name"
         android:textSize="18sp"
         android:textColor="#0D47A1"
         android:textStyle="bold" />
+
+    <!-- Item Location -->
+    <TextView
+        android:id="@+id/itemLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Location"
+        android:textSize="16sp"
+        android:textColor="#1565C0"
+        android:layout_marginTop="4dp" />
+
+    <!-- Item Cost -->
+    <TextView
+        android:id="@+id/itemCost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cost"
+        android:textSize="16sp"
+        android:textColor="#1565C0"
+        android:layout_marginTop="2dp" />
+
+    <!-- Item Description -->
+    <TextView
+        android:id="@+id/itemDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="14sp"
+        android:textColor="#0D47A1"
+        android:layout_marginTop="6dp" />
+
 </LinearLayout>
