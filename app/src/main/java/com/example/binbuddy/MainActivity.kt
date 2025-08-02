@@ -5,6 +5,13 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
+import com.example.binbuddy.data.AppDatabase
+import com.example.binbuddy.data.SampleData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,6 +23,16 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         setContentView(R.layout.activity_main)
+
+        val db = AppDatabase.getInstance(this)
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                val dao = db.itemDao()
+                if (dao.getAllItems().isEmpty()) {
+                    SampleData.makeItems().forEach { dao.insert(it) }
+                }
+            }
+        }
 
         val storesBtn = findViewById<Button>(R.id.storesButton)
         val profileBtn = findViewById<Button>(R.id.profileButton)

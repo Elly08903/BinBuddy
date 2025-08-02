@@ -25,12 +25,12 @@
         android:layout_gravity="center"
         android:layout_marginBottom="16dp"
         android:backgroundTint="#3F51B5"
-        android:text="Example Store"
+        android:text="Hometown Market"
         android:textColor="#FFFFFF" />
 
     <!-- Placeholder for more store-related content -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="List of stores or store features goes here." />
+        android:text="" />
 </LinearLayout>

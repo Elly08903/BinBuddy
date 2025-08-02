@@ -1,20 +1,68 @@
 package com.example.binbuddy
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.binbuddy.data.AppDatabase
+import com.example.binbuddy.data.ItemEntity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ItemsActivity : AppCompatActivity() {
 
-    private val itemList = listOf("Milk", "Bread", "Eggs", "Cheese", "Apples")
+    private val db by lazy { AppDatabase.getInstance(this) }
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: ItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_items)
 
-        val recyclerView = findViewById<RecyclerView>(R.id.itemsRecyclerView)
+        recyclerView = findViewById(R.id.itemsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = ItemAdapter(itemList)
+
+        // Start with an empty adapter and click listener
+        adapter = ItemAdapter(emptyList()) { selected ->
+            Intent(this, ItemDetailActivity::class.java).apply {
+                putExtra("itemId",          selected.id)
+                putExtra("itemTitle",       selected.title)
+                putExtra("itemLocation",    selected.location)
+                putExtra("itemCost",        selected.cost)
+                putExtra("itemDescription", selected.description)
+            }.also(::startActivity)
+        }
+        recyclerView.adapter = adapter
+
+        // Grab the SearchView from the layout
+        val searchView = findViewById<SearchView>(R.id.itemsSearchView)
+
+        // Load initial data off the main thread
+        lifecycleScope.launch {
+            val items: List<ItemEntity> = withContext(Dispatchers.IO) {
+                db.itemDao().getAllItems()
+            }
+            adapter.updateList(items)
+        }
+
+        // Hook up real-time searching
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?) = false
+            override fun onQueryTextChange(newText: String?): Boolean {
+                val q = newText.orEmpty()
+                lifecycleScope.launch {
+                    val results = withContext(Dispatchers.IO) {
+                        if (q.isBlank()) db.itemDao().getAllItems()
+                        else             db.itemDao().searchItems(q)
+                    }
+                    adapter.updateList(results)
+                }
+                return true
+            }
+        })
     }
 }
