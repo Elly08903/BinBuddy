@@ -1,36 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-
-    android:padding="32dp"
     android:background="#E3F2FD">
 
-    <TextView
-        android:id="@+id/storeTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Store Page"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:textColor="#0D47A1"
-        android:layout_marginBottom="24dp" />
-
-    <Button
-        android:id="@+id/exStore"
+    <LinearLayout
+        android:id="@+id/storesContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="#3F51B5"
-        android:text="Hometown Market"
-        android:textColor="#FFFFFF" />
+        android:orientation="vertical"
+        android:padding="32dp">
 
-    <!-- Placeholder for more store-related content -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/storeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Store Page"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#0D47A1"
+            android:layout_marginBottom="24dp" />
+
+        <!-- dynamic buttons go here -->
+
+    </LinearLayout>
+</ScrollView>

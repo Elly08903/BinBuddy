@@ -1,4 +1,3 @@
-// app/src/main/java/com/example/binbuddy/data/ItemDao.kt
 package com.example.binbuddy.data
 
 import androidx.room.*
@@ -18,13 +17,14 @@ interface ItemDao {
     fun update(item: ItemEntity)
 
     @Query("""
-      SELECT * FROM items
-      WHERE title   LIKE '%' || :q || '%'
-         OR location LIKE '%' || :q || '%'
-         OR description LIKE '%' || :q || '%'
-      ORDER BY title ASC
-    """)
-    fun searchItems(q: String): List<ItemEntity>
+    SELECT *
+      FROM items
+     WHERE title       LIKE :pattern
+        OR location    LIKE :pattern
+        OR description LIKE :pattern
+     ORDER BY title ASC
+  """)
+    fun searchItems(pattern: String): List<ItemEntity>
 
     @Query("DELETE FROM items")
     fun deleteAllItems()

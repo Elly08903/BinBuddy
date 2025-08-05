@@ -26,7 +26,6 @@ class ItemsActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.itemsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Start with an empty adapter and click listener
         adapter = ItemAdapter(emptyList()) { selected ->
             Intent(this, ItemDetailActivity::class.java).apply {
                 putExtra("itemId",          selected.id)
@@ -38,10 +37,8 @@ class ItemsActivity : AppCompatActivity() {
         }
         recyclerView.adapter = adapter
 
-        // Grab the SearchView from the layout
         val searchView = findViewById<SearchView>(R.id.itemsSearchView)
 
-        // Load initial data off the main thread
         lifecycleScope.launch {
             val items: List<ItemEntity> = withContext(Dispatchers.IO) {
                 db.itemDao().getAllItems()
@@ -49,15 +46,17 @@ class ItemsActivity : AppCompatActivity() {
             adapter.updateList(items)
         }
 
-        // Hook up real-time searching
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?) = false
             override fun onQueryTextChange(newText: String?): Boolean {
-                val q = newText.orEmpty()
+                val raw = newText.orEmpty()
+                val pattern = "%$raw%"
                 lifecycleScope.launch {
                     val results = withContext(Dispatchers.IO) {
-                        if (q.isBlank()) db.itemDao().getAllItems()
-                        else             db.itemDao().searchItems(q)
+                        if (raw.isBlank())
+                            db.itemDao().getAllItems()
+                        else
+                            db.itemDao().searchItems(pattern)
                     }
                     adapter.updateList(results)
                 }
