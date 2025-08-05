@@ -14,8 +14,8 @@ class ItemAdapter(
 
     inner class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val titleText: TextView = view.findViewById(R.id.itemName)
-        private val locationText: TextView = view.findViewById(R.id.itemLocation)  // add this to your layout
-        private val costText: TextView = view.findViewById(R.id.itemCost)          // and this
+        private val locationText: TextView = view.findViewById(R.id.itemLocation)
+        private val costText: TextView = view.findViewById(R.id.itemCost)
         private val descriptionText: TextView = view.findViewById(R.id.itemDescription)
 
         fun bind(item: ItemEntity) {
