@@ -49,6 +49,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "inventory.db"
                 )
                     .addMigrations(MIGRATION_1_2)
+                    .allowMainThreadQueries()
                     .fallbackToDestructiveMigration(true)
                     .build()
                     .also { INSTANCE = it }
