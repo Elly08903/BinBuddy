@@ -14,7 +14,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         UserEntity::class,
         AdminStoreRef::class
     ],
-    version = 3,
+    version = 7,
     exportSchema = false
 )
 

@@ -33,6 +33,7 @@ class ItemsActivity : AppCompatActivity() {
                 putExtra("itemLocation",    selected.location)
                 putExtra("itemCost",        selected.cost)
                 putExtra("itemDescription", selected.description)
+                putExtra("imageId",         selected.imageId)
             }.also(::startActivity)
         }
         recyclerView.adapter = adapter

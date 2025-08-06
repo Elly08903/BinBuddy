@@ -24,5 +24,6 @@ data class ItemEntity(
     val location: String,
     val cost: String,
     val description: String,
-    val storeId: Long
+    val storeId: Long,
+    val imageId: Int
 )
