@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F0F4FF">
+    android:background="#F0F4FF"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:orientation="vertical"
@@ -12,15 +13,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal">
 
-        <TextView
-            android:id="@+id/itemTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Item Name"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:textColor="#1A237E"
-            android:layout_marginBottom="24dp" />
 
         <ImageView
             android:id="@+id/itemImage"
@@ -29,6 +21,17 @@
             android:src="@drawable/ic_launcher_foreground"
             android:contentDescription="Item Image"
             android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:id="@+id/itemTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="Item Name"
+            android:textColor="#1A237E"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
 
         <TextView
             android:id="@+id/itemLocation"
