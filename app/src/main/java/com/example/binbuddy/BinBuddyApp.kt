@@ -2,6 +2,7 @@
 package com.example.binbuddy
 
 import android.app.Application
+import android.util.Log
 import com.example.binbuddy.data.AppDatabase
 import com.example.binbuddy.data.SampleData
 import com.example.binbuddy.data.StoreEntity
@@ -13,6 +14,8 @@ import kotlinx.coroutines.launch
 class BinBuddyApp : Application() {
     override fun onCreate() {
         super.onCreate()
+        val user = SessionManager(this).getLoggedInUser()
+        Log.d("BinBuddyApp", "Restored session for user: ${user?.username}")
 
         CoroutineScope(Dispatchers.IO).launch {
             val db = AppDatabase.getInstance(this@BinBuddyApp)
