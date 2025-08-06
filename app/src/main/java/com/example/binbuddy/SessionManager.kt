@@ -1,25 +1,37 @@
 package com.example.binbuddy
 
 import android.content.Context
+import com.example.binbuddy.data.AppDatabase
 import com.example.binbuddy.data.UserEntity
-import com.google.gson.Gson
+import androidx.core.content.edit
 
-class SessionManager(context: Context) {
-    private val prefs = context.getSharedPreferences("binbuddy_prefs", Context.MODE_PRIVATE)
-    private val gson = Gson()
+class SessionManager(private val ctx: Context) {
+    private val prefs = ctx.getSharedPreferences("session_prefs", Context.MODE_PRIVATE)
+
+    companion object {
+        private const val KEY_USER_ID = "logged_in_user_id"
+    }
+
+
+    fun getLoggedInUser(): UserEntity? {
+        val uid = prefs.getLong(KEY_USER_ID, -1L)
+        if (uid < 0) return null
+
+        return AppDatabase.getInstance(ctx)
+            .userDao()
+            .getUserById(uid)
+    }
 
     fun login(user: UserEntity) {
-        prefs.edit()
-            .putString("current_user", gson.toJson(user))
-            .apply()
+        prefs.edit {
+            putLong(KEY_USER_ID, user.id)
+        }
     }
 
     fun logout() {
-        prefs.edit().remove("current_user").apply()
+        prefs.edit {
+            remove(KEY_USER_ID)
+        }
     }
 
-    fun getLoggedInUser(): UserEntity? {
-        val json = prefs.getString("current_user", null) ?: return null
-        return gson.fromJson(json, UserEntity::class.java)
-    }
 }
