@@ -3,50 +3,69 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="16dp"
     android:layout_marginBottom="12dp"
     android:background="#1680FB"
     >
 
+    <!-- Image on the left -->
+    <ImageView
+        android:id="@+id/itemImage"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginEnd="16dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_launcher_foreground" /> <!-- Replace with your actual image -->
 
-    <TextView
-        android:id="@+id/itemName"
-        android:layout_width="wrap_content"
+    <!-- Vertical text section -->
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Item Name"
-        android:textSize="18sp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- Item Name -->
+
+        <TextView
+            android:id="@+id/itemName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Item Name"
+            android:textSize="18sp"
         android:textColor="#FFFFFF"
-        android:textStyle="bold" />
+            android:textStyle="bold" />
 
-
-    <TextView
-        android:id="@+id/itemLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Location"
-        android:textSize="16sp"
+    <!-- Item Location -->
+        <TextView
+            android:id="@+id/itemLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location"
+            android:textSize="16sp"
         android:textColor="#FFFFFF"
-        android:layout_marginTop="4dp" />
+            android:layout_marginTop="4dp" />
 
-
-    <TextView
-        android:id="@+id/itemCost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cost"
-        android:textSize="16sp"
+    <!-- Item Cost -->
+        <TextView
+            android:id="@+id/itemCost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cost"
+            android:textSize="16sp"
         android:textColor="#FFFFFF"
-        android:layout_marginTop="2dp" />
+            android:layout_marginTop="2dp" />
 
 
-    <TextView
-        android:id="@+id/itemDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="14sp"
-        android:textColor="#FFFFFF"
-        android:layout_marginTop="6dp" />
+        <TextView
+            android:id="@+id/itemDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="14sp"
+        android:textColor="#0D47A1"
+            android:layout_marginTop="6dp" />
 
+    </LinearLayout>
 </LinearLayout>
+

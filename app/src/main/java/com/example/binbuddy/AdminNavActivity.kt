@@ -1,8 +1,10 @@
 package com.example.binbuddy
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -14,15 +16,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ItemsActivity : AppCompatActivity() {
-
+class AdminNavActivity : AppCompatActivity() {
     private val db by lazy { AppDatabase.getInstance(this) }
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_items)
+        setContentView(R.layout.admin_navigation)
 
         recyclerView = findViewById(R.id.itemsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -65,12 +66,52 @@ class ItemsActivity : AppCompatActivity() {
                 return true
             }
         })
-    }
-    fun onBackClick(v: View) = onBackPressedDispatcher.onBackPressed()
 
-    fun onHomeClick(v: View) {
-        val i = Intent(this, MainActivity::class.java)
-            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        startActivity(i)
+        val addProduct = findViewById<Button>(R.id.addProduct)
+
+        addProduct.setOnClickListener{
+            // Inflate custom layout
+            val dialogView = layoutInflater.inflate(R.layout.dialog_add_item, null)
+
+            // Get EditTexts from layout
+            val nameInput = dialogView.findViewById<EditText>(R.id.editItemName)
+            val descInput = dialogView.findViewById<EditText>(R.id.editItemDescription)
+            val priceInput = dialogView.findViewById<EditText>(R.id.editItemPrice)
+            val locationInput = dialogView.findViewById<EditText>(R.id.editItemLocation)
+
+
+            // Build the AlertDialog
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Add Item")
+                .setView(dialogView)
+                .setPositiveButton("Add") { _, _ ->
+                    val newItem = ItemEntity(
+                        title = nameInput.text.toString(),
+                        location = locationInput.text.toString(),
+                        cost = priceInput.text.toString(),
+                        description = descInput.text.toString(),
+                        storeId = 1, // or choose dynamically if you want
+                        imageId = R.drawable.ic_launcher_foreground // use a default image or let user pick
+                    )
+
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.IO) {
+                            db.itemDao().insert(newItem)
+                        }
+                        // Fetch updated list on main thread
+                        val updatedItems = withContext(Dispatchers.IO) {
+                            db.itemDao().getAllItems()
+                        }
+                        adapter.updateList(updatedItems)
+                        // Scroll to last item (newly added)
+                        recyclerView.scrollToPosition(updatedItems.size - 1)
+                    }
+                }
+                .setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+
+            builder.create().show()
+        }
     }
 }

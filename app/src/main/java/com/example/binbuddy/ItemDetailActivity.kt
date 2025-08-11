@@ -3,6 +3,7 @@ package com.example.binbuddy
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.ImageView
 import android.widget.TextView
@@ -22,7 +23,9 @@ class ItemDetailActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.itemCost).text = "Cost: $cost"
         findViewById<TextView>(R.id.itemDescription).text = "Description: $description"
 
-        // You can build out the Image Logic here
+        val imageResId = intent.getIntExtra("imageId", R.drawable.ic_launcher_foreground)
+        findViewById<ImageView>(R.id.itemImage).setImageResource(imageResId)
+
     }
     fun onBackClick(v: View) = onBackPressedDispatcher.onBackPressed()
 

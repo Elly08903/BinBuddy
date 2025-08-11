@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/gradient_bg">
+    android:background="@drawable/gradient_bg"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:orientation="vertical"
@@ -65,6 +66,17 @@
             android:src="@drawable/ic_launcher_foreground"
             android:contentDescription="Item Image"
             android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:id="@+id/itemTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="Item Name"
+            android:textColor="#1A237E"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
 
         <TextView
             android:id="@+id/itemLocation"
