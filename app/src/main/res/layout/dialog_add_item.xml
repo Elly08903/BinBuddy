@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:padding="20dp">
 
+
     <EditText
         android:id="@+id/editItemName"
         android:layout_width="match_parent"

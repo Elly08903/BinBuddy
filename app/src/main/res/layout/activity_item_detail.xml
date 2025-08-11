@@ -49,15 +49,6 @@
                 app:tint="#FFFFFF" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/itemTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Item Name"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:layout_marginBottom="24dp" />
 
         <ImageView
             android:id="@+id/itemImage"

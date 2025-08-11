@@ -19,17 +19,16 @@
             android:theme="@style/Theme.BinBuddy">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StoreActivity" />
-        <activity android:name=".ItemsActivity" />
-        <activity android:name=".ItemDetailActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".AdminNavActivity" />
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".StoreActivity"  android:exported="false" />
+        <activity android:name=".ItemsActivity" android:exported="false" />
+        <activity android:name=".ItemDetailActivity" android:exported="false" />
+        <activity android:name=".ProfileActivity" android:exported="false" />
+        <activity android:name=".SettingsActivity" android:exported="false" />
+        <activity android:name=".AdminNavActivity" android:exported="false"/>
+        <activity android:name=".MainActivity" android:exported="false"/>
 
     </application>
 
