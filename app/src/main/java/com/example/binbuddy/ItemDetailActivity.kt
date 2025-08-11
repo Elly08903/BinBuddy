@@ -1,6 +1,8 @@
 package com.example.binbuddy
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.ImageView
 import android.widget.TextView
@@ -21,5 +23,12 @@ class ItemDetailActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.itemDescription).text = "Description: $description"
 
         // You can build out the Image Logic here
+    }
+    fun onBackClick(v: View) = onBackPressedDispatcher.onBackPressed()
+
+    fun onHomeClick(v: View) {
+        val i = Intent(this, MainActivity::class.java)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        startActivity(i)
     }
 }

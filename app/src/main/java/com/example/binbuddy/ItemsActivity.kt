@@ -2,6 +2,7 @@ package com.example.binbuddy
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -64,5 +65,12 @@ class ItemsActivity : AppCompatActivity() {
                 return true
             }
         })
+    }
+    fun onBackClick(v: View) = onBackPressedDispatcher.onBackPressed()
+
+    fun onHomeClick(v: View) {
+        val i = Intent(this, MainActivity::class.java)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        startActivity(i)
     }
 }

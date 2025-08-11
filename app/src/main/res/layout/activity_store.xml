@@ -1,12 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
 
     android:padding="32dp"
-    android:background="#E3F2FD">
+    android:background="@drawable/gradient_bg">
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="60dp"
+        android:gravity="center_vertical"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:onClick="onBackClick"
+            android:src="@drawable/baseline_arrow_back_24"
+            app:tint="#FFFFFF" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/homeButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Home"
+            android:onClick="onHomeClick"
+            android:src="@drawable/baseline_home_24"
+            app:tint="#FFFFFF" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/storeTitle"
@@ -15,7 +53,7 @@
         android:text="Store Page"
         android:textSize="28sp"
         android:textStyle="bold"
-        android:textColor="#0D47A1"
+        android:textColor="#FFFFFF"
         android:layout_marginBottom="24dp" />
 
     <Button
@@ -28,7 +66,7 @@
         android:text="Hometown Market"
         android:textColor="#FFFFFF" />
 
-    <!-- Placeholder for more store-related content -->
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
