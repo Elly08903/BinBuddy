@@ -24,6 +24,16 @@ class ItemsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_items)
 
+        var storeId = intent.getLongExtra("storeId", -1)
+
+        lifecycleScope.launch {
+            val items = withContext(Dispatchers.IO) {
+                if (storeId > 0) db.itemDao().getItemsForStore(storeId)
+                else             db.itemDao().getAllItems()
+            }
+            adapter.updateList(items)
+        }
+
         recyclerView = findViewById(R.id.itemsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -41,13 +51,6 @@ class ItemsActivity : AppCompatActivity() {
 
         val searchView = findViewById<SearchView>(R.id.itemsSearchView)
 
-        lifecycleScope.launch {
-            val items: List<ItemEntity> = withContext(Dispatchers.IO) {
-                db.itemDao().getAllItems()
-            }
-            adapter.updateList(items)
-        }
-
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?) = false
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -55,10 +58,13 @@ class ItemsActivity : AppCompatActivity() {
                 val pattern = "%$raw%"
                 lifecycleScope.launch {
                     val results = withContext(Dispatchers.IO) {
-                        if (raw.isBlank())
-                            db.itemDao().getAllItems()
-                        else
-                            db.itemDao().searchItems(pattern)
+                        if (raw.isBlank()) {
+                            if (storeId > 0) db.itemDao().getItemsForStore(storeId)
+                            else             db.itemDao().getAllItems()
+                        } else {
+                            if (storeId > 0) db.itemDao().searchItemsForStore(storeId, pattern)
+                            else             db.itemDao().searchItems(pattern)
+                        }
                     }
                     adapter.updateList(results)
                 }

@@ -26,6 +26,21 @@ interface ItemDao {
   """)
     fun searchItems(pattern: String): List<ItemEntity>
 
+    @Query("SELECT * FROM items WHERE storeId = :storeId ORDER BY title ASC")
+    fun getItemsForStore(storeId: Long): List<ItemEntity>
+
+    @Query("""
+        SELECT * FROM items
+        WHERE storeId = :storeId AND (
+              title LIKE :pattern OR
+              location LIKE :pattern OR
+              description LIKE :pattern
+        )
+        ORDER BY title ASC
+        """)
+    fun searchItemsForStore(storeId: Long, pattern: String): List<ItemEntity>
+
+
     @Query("DELETE FROM items")
     fun deleteAllItems()
 }

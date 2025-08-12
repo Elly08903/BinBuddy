@@ -54,4 +54,13 @@ class ItemAdapter(
         items = newItems
         notifyDataSetChanged()
     }
+
+    fun getItemAt(position: Int): ItemEntity = items[position]
+
+    fun removeAt(position: Int) {
+        val m = items.toMutableList()
+        m.removeAt(position)
+        items = m
+        notifyItemRemoved(position)
+    }
 }
