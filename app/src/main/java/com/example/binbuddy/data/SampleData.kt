@@ -2,10 +2,7 @@ package com.example.binbuddy.data
 
 import com.example.binbuddy.R
 
-/**
- * Provides a reusable set of sample ItemEntity objects for seeding the database,
- * now including storeId assignments cycling among the first three stores.
- */
+
 object SampleData {
     fun makeItems(): List<ItemEntity> = listOf(
         ItemEntity(title = "Milk",           location = "Aisle 1",    cost = "$2.99",  description = "1 gallon whole milk",     storeId = 1,  imageId = R.drawable.milk),
