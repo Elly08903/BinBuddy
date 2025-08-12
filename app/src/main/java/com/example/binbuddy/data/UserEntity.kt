@@ -12,6 +12,12 @@ data class UserEntity(
     val username: String,
     val password: String,
 
+    @ColumnInfo(defaultValue = "''")
+    val name: String = "",
+
+    @ColumnInfo(defaultValue = "''")
+    val email: String = "",
+
     @ColumnInfo(defaultValue = "0")
     val isAdmin: Boolean = false
 )

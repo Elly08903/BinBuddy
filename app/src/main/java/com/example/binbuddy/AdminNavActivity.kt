@@ -18,12 +18,35 @@ import android.widget.Spinner
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.ItemTouchHelper
-
+import android.net.Uri
+import android.widget.ImageView
+import androidx.activity.result.contract.ActivityResultContracts.OpenDocument
 
 class AdminNavActivity : AppCompatActivity() {
     private val db by lazy { AppDatabase.getInstance(this) }
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ItemAdapter
+
+    private var pickedImageUri: Uri? = null
+    private var onImagePicked: ((Uri) -> Unit)? = null
+
+    // register once
+    private val pickImage = registerForActivityResult(OpenDocument()) { uri: Uri? ->
+        if (uri != null) {
+
+            // persist read permission
+            try {
+                contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+            } catch (_: SecurityException) {
+            }
+
+            pickedImageUri = uri
+            onImagePicked?.invoke(uri)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,39 +139,55 @@ class AdminNavActivity : AppCompatActivity() {
             val addProduct = findViewById<Button>(R.id.addProduct)
             addProduct.setOnClickListener {
                 val dialogView = layoutInflater.inflate(R.layout.dialog_add_item, null)
-                val nameInput     = dialogView.findViewById<EditText>(R.id.editItemName)
-                val descInput     = dialogView.findViewById<EditText>(R.id.editItemDescription)
-                val priceInput    = dialogView.findViewById<EditText>(R.id.editItemPrice)
+
+                val nameInput = dialogView.findViewById<EditText>(R.id.editItemName)
+                val descInput = dialogView.findViewById<EditText>(R.id.editItemDescription)
+                val priceInput = dialogView.findViewById<EditText>(R.id.editItemPrice)
                 val locationInput = dialogView.findViewById<EditText>(R.id.editItemLocation)
-                val spStore       = dialogView.findViewById<Spinner>(R.id.spStore)
+                val spStore = dialogView.findViewById<Spinner>(R.id.spStore)
+                val ivPreview = dialogView.findViewById<ImageView>(R.id.ivPreview)
+                val btnPickImage = dialogView.findViewById<Button>(R.id.btnPickImage)
+
+                pickedImageUri = null
+                ivPreview.setImageDrawable(null)
+
+                onImagePicked = { uri -> ivPreview.setImageURI(uri) }
+
+                btnPickImage.setOnClickListener {
+                    pickImage.launch(arrayOf("image/*"))
+                }
 
                 lifecycleScope.launch {
                     val stores = withContext(Dispatchers.IO) { db.storeDao().getAllStores() }
+                    val names = stores.map { it.name }
                     spStore.adapter = ArrayAdapter(
                         this@AdminNavActivity,
                         android.R.layout.simple_spinner_dropdown_item,
-                        stores.map { it.name }
+                        names
                     )
 
                     AlertDialog.Builder(this@AdminNavActivity)
                         .setTitle("Add Item")
                         .setView(dialogView)
                         .setPositiveButton("Add") { _, _ ->
-                            val idx = spStore.selectedItemPosition
-                            val storeId = stores.getOrNull(idx)?.id ?: return@setPositiveButton
+                            val selectedIdx = spStore.selectedItemPosition
+                            val selectedStore =
+                                stores.getOrNull(selectedIdx)?.id ?: return@setPositiveButton
 
                             val newItem = ItemEntity(
                                 title = nameInput.text.toString(),
                                 location = locationInput.text.toString(),
                                 cost = priceInput.text.toString(),
                                 description = descInput.text.toString(),
-                                storeId = storeId,
-                                imageId = R.drawable.ic_launcher_foreground
+                                storeId = selectedStore,
+                                imageId = 0,
+                                imageUri = pickedImageUri?.toString()
                             )
 
                             lifecycleScope.launch {
                                 withContext(Dispatchers.IO) { db.itemDao().insert(newItem) }
-                                val updated = withContext(Dispatchers.IO) { db.itemDao().getAllItems() }
+                                val updated =
+                                    withContext(Dispatchers.IO) { db.itemDao().getAllItems() }
                                 adapter.updateList(updated)
                                 recyclerView.scrollToPosition(updated.size - 1)
                             }

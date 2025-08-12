@@ -21,12 +21,26 @@ class BinBuddyApp : Application() {
             val db = AppDatabase.getInstance(this@BinBuddyApp)
 
             val userDao = db.userDao()
-            if (userDao.getUserByUsername("admin") == null) {
-                userDao.insertUser(UserEntity(username="admin", password = "password123", isAdmin =  true))
-            }
-            if (userDao.getUserByUsername("user") == null) {
-                userDao.insertUser(UserEntity(username="user", password = "userpass", isAdmin = false))
-            }
+            userDao.insertUser(
+                UserEntity(
+                    username = "admin",
+                    password = "password123",
+                    name     = "Admin User",
+                    email    = "admin@example.com",
+                    isAdmin  = true
+                )
+            )
+
+            userDao.insertUser(
+                UserEntity(
+                    username = "user",
+                    password = "userpass",
+                    name     = "Basic User",
+                    email    = "user@example.com",
+                    isAdmin  = false
+                )
+            )
+
 
             val storeDao = db.storeDao()
             if (storeDao.getAllStores().isEmpty()) {
