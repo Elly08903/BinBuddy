@@ -46,18 +46,17 @@ class LoginActivity : AppCompatActivity() {
 
         btnGuest.setOnClickListener {
             lifecycleScope.launch {
-                val guestUser = withContext(Dispatchers.IO) {
-                    db.userDao().getUserByUsername("user") ?: run {
-                        val id = db.userDao().insertUser(
-                            UserEntity(username = "user", password = "userpass", isAdmin = false)
-                        )
-                        db.userDao().getUserByUsername("user")!!
-                    }
+                val user = withContext(Dispatchers.IO) {
+                    db.userDao().getUserByUsername("user")
+                        ?: UserEntity(username = "user", password = "userpass", isAdmin = false).also {
+                            db.userDao().insertUser(it)
+                        }.let { db.userDao().getUserByUsername("user") }
                 }
-                session.login(guestUser)
+                SessionManager(this@LoginActivity).guestLogin(usingUserId = user!!.id)
                 startActivity(Intent(this@LoginActivity, StoreActivity::class.java))
                 finish()
             }
         }
+
     }
 }
