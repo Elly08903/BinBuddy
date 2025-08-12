@@ -1,6 +1,5 @@
 package com.example.binbuddy
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -15,6 +14,11 @@ import com.example.binbuddy.data.ItemEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import android.widget.Spinner
+import android.widget.ArrayAdapter
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.ItemTouchHelper
+
 
 class AdminNavActivity : AppCompatActivity() {
     private val db by lazy { AppDatabase.getInstance(this) }
@@ -23,95 +27,136 @@ class AdminNavActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.admin_navigation)
 
-        recyclerView = findViewById(R.id.itemsRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        adapter = ItemAdapter(emptyList()) { selected ->
-            Intent(this, ItemDetailActivity::class.java).apply {
-                putExtra("itemId",          selected.id)
-                putExtra("itemTitle",       selected.title)
-                putExtra("itemLocation",    selected.location)
-                putExtra("itemCost",        selected.cost)
-                putExtra("itemDescription", selected.description)
-                putExtra("imageId",         selected.imageId)
-            }.also(::startActivity)
+        val session = SessionManager(this)
+        if (session.isGuest()) {
+            finish()
+            return
         }
-        recyclerView.adapter = adapter
-
-        val searchView = findViewById<SearchView>(R.id.itemsSearchView)
 
         lifecycleScope.launch {
-            val items: List<ItemEntity> = withContext(Dispatchers.IO) {
-                db.itemDao().getAllItems()
+            val isAdmin = withContext(Dispatchers.IO) {
+                session.getLoggedInUser()?.isAdmin == true
             }
-            adapter.updateList(items)
-        }
+            if (!isAdmin) {
+                finish()
+                return@launch
+            }
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?) = false
-            override fun onQueryTextChange(newText: String?): Boolean {
-                val raw = newText.orEmpty()
-                val pattern = "%$raw%"
-                lifecycleScope.launch {
-                    val results = withContext(Dispatchers.IO) {
-                        if (raw.isBlank())
-                            db.itemDao().getAllItems()
-                        else
-                            db.itemDao().searchItems(pattern)
-                    }
-                    adapter.updateList(results)
+            setContentView(R.layout.admin_navigation)
+
+            recyclerView = findViewById(R.id.itemsRecyclerView)
+            recyclerView.layoutManager = LinearLayoutManager(this@AdminNavActivity)
+
+            adapter = ItemAdapter(emptyList()) { selected ->
+                Intent(this@AdminNavActivity, ItemDetailActivity::class.java).apply {
+                    putExtra("itemId", selected.id)
+                    putExtra("itemTitle", selected.title)
+                    putExtra("itemLocation", selected.location)
+                    putExtra("itemCost", selected.cost)
+                    putExtra("itemDescription", selected.description)
+                    putExtra("imageId", selected.imageId)
+                }.also { startActivity(it) }
+            }
+            recyclerView.adapter = adapter
+
+            val swipeToDelete = object :
+                ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                override fun onMove(
+                    rv: RecyclerView,
+                    vh: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ) = false
+
+                override fun onSwiped(vh: RecyclerView.ViewHolder, dir: Int) {
+                    val pos = vh.adapterPosition.takeIf { it != RecyclerView.NO_POSITION }
+                        ?: return
+                    val item = adapter.getItemAt(pos)
+
+                    AlertDialog.Builder(this@AdminNavActivity)
+                        .setTitle("Delete item?")
+                        .setMessage("Remove “${item.title}” from inventory?")
+                        .setPositiveButton("Delete") { _, _ ->
+                            lifecycleScope.launch {
+                                withContext(Dispatchers.IO) { db.itemDao().delete(item) }
+                                adapter.removeAt(pos)
+                            }
+                        }
+                        .setNegativeButton("Cancel") { d, _ ->
+                            d.dismiss()
+                            adapter.notifyItemChanged(pos)
+                        }
+                        .setOnCancelListener { adapter.notifyItemChanged(pos) }
+                        .show()
                 }
-                return true
             }
-        })
+            ItemTouchHelper(swipeToDelete).attachToRecyclerView(recyclerView)
 
-        val addProduct = findViewById<Button>(R.id.addProduct)
+            val searchView = findViewById<SearchView>(R.id.itemsSearchView)
+            launch {
+                val items = withContext(Dispatchers.IO) { db.itemDao().getAllItems() }
+                adapter.updateList(items)
+            }
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?) = false
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    val raw = newText.orEmpty()
+                    val pattern = "%$raw%"
+                    lifecycleScope.launch {
+                        val results = withContext(Dispatchers.IO) {
+                            if (raw.isBlank()) db.itemDao().getAllItems()
+                            else db.itemDao().searchItems(pattern)
+                        }
+                        adapter.updateList(results)
+                    }
+                    return true
+                }
+            })
 
-        addProduct.setOnClickListener{
-            // Inflate custom layout
-            val dialogView = layoutInflater.inflate(R.layout.dialog_add_item, null)
+            val addProduct = findViewById<Button>(R.id.addProduct)
+            addProduct.setOnClickListener {
+                val dialogView = layoutInflater.inflate(R.layout.dialog_add_item, null)
+                val nameInput     = dialogView.findViewById<EditText>(R.id.editItemName)
+                val descInput     = dialogView.findViewById<EditText>(R.id.editItemDescription)
+                val priceInput    = dialogView.findViewById<EditText>(R.id.editItemPrice)
+                val locationInput = dialogView.findViewById<EditText>(R.id.editItemLocation)
+                val spStore       = dialogView.findViewById<Spinner>(R.id.spStore)
 
-            // Get EditTexts from layout
-            val nameInput = dialogView.findViewById<EditText>(R.id.editItemName)
-            val descInput = dialogView.findViewById<EditText>(R.id.editItemDescription)
-            val priceInput = dialogView.findViewById<EditText>(R.id.editItemPrice)
-            val locationInput = dialogView.findViewById<EditText>(R.id.editItemLocation)
-
-
-            // Build the AlertDialog
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("Add Item")
-                .setView(dialogView)
-                .setPositiveButton("Add") { _, _ ->
-                    val newItem = ItemEntity(
-                        title = nameInput.text.toString(),
-                        location = locationInput.text.toString(),
-                        cost = priceInput.text.toString(),
-                        description = descInput.text.toString(),
-                        storeId = 1, // or choose dynamically if you want
-                        imageId = R.drawable.ic_launcher_foreground // use a default image or let user pick
+                lifecycleScope.launch {
+                    val stores = withContext(Dispatchers.IO) { db.storeDao().getAllStores() }
+                    spStore.adapter = ArrayAdapter(
+                        this@AdminNavActivity,
+                        android.R.layout.simple_spinner_dropdown_item,
+                        stores.map { it.name }
                     )
 
-                    lifecycleScope.launch {
-                        withContext(Dispatchers.IO) {
-                            db.itemDao().insert(newItem)
-                        }
-                        // Fetch updated list on main thread
-                        val updatedItems = withContext(Dispatchers.IO) {
-                            db.itemDao().getAllItems()
-                        }
-                        adapter.updateList(updatedItems)
-                        // Scroll to last item (newly added)
-                        recyclerView.scrollToPosition(updatedItems.size - 1)
-                    }
-                }
-                .setNegativeButton("Cancel") { dialog, _ ->
-                    dialog.dismiss()
-                }
+                    AlertDialog.Builder(this@AdminNavActivity)
+                        .setTitle("Add Item")
+                        .setView(dialogView)
+                        .setPositiveButton("Add") { _, _ ->
+                            val idx = spStore.selectedItemPosition
+                            val storeId = stores.getOrNull(idx)?.id ?: return@setPositiveButton
 
-            builder.create().show()
+                            val newItem = ItemEntity(
+                                title = nameInput.text.toString(),
+                                location = locationInput.text.toString(),
+                                cost = priceInput.text.toString(),
+                                description = descInput.text.toString(),
+                                storeId = storeId,
+                                imageId = R.drawable.ic_launcher_foreground
+                            )
+
+                            lifecycleScope.launch {
+                                withContext(Dispatchers.IO) { db.itemDao().insert(newItem) }
+                                val updated = withContext(Dispatchers.IO) { db.itemDao().getAllItems() }
+                                adapter.updateList(updated)
+                                recyclerView.scrollToPosition(updated.size - 1)
+                            }
+                        }
+                        .setNegativeButton("Cancel") { d, _ -> d.dismiss() }
+                        .show()
+                }
+            }
         }
     }
 }
