@@ -2,9 +2,11 @@ package com.example.binbuddy
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
@@ -28,6 +30,7 @@ class MainActivity : AppCompatActivity() {
             finish()
             return
         }
+
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.decorView.setOnApplyWindowInsetsListener { view, insets ->
@@ -84,8 +87,32 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.storesButton).setOnClickListener {
             startActivity(Intent(this, StoreActivity::class.java))
         }
-        findViewById<Button>(R.id.profileButton).setOnClickListener {
+        val session = SessionManager(this)
+        val profileBtn = findViewById<Button>(R.id.profileButton)
+
+        // Link-style TextView
+        findViewById<TextView?>(R.id.tvLoginPrompt)?.let { tv ->
+            tv.visibility = if (session.isGuest()) View.VISIBLE else View.GONE
+            tv.setOnClickListener {
+                startActivity(Intent(this, LoginActivity::class.java).apply {
+//                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                })
+                finish()
+            }
+        }
+        profileBtn.setOnClickListener {
+            if (session.isGuest()) {
+                Toast.makeText(this, "Profile is unavailable for guest accounts.", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, LoginActivity::class.java))
+                return@setOnClickListener
+            }
             startActivity(Intent(this, ProfileActivity::class.java))
+        }
+
+        // disable the button for guests
+        if (session.isGuest()) {
+            profileBtn.isEnabled = false
+            profileBtn.alpha = 0.5f
         }
         findViewById<Button>(R.id.settingsButton).setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))

@@ -67,4 +67,17 @@
         android:text="Settings"
         android:textColor="#FFFFFF" />
 
+    <TextView
+        android:id="@+id/tvLoginPrompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You’re in guest mode - log in here"
+        android:textColor="#0D47A1"
+        android:textStyle="bold"
+        android:padding="8dp"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:visibility="gone"/>
+
+
 </LinearLayout>
