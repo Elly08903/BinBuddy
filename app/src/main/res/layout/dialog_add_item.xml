@@ -41,4 +41,18 @@
         android:layout_height="wrap_content"
         android:hint="Description" />
 
+    <ImageView
+        android:id="@+id/ivPreview"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:scaleType="centerCrop"
+        android:background="#22000000"
+        android:layout_marginBottom="12dp" />
+
+    <Button
+        android:id="@+id/btnPickImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose Image" />
+
 </LinearLayout>

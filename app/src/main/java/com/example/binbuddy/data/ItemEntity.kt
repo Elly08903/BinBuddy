@@ -12,8 +12,8 @@ import androidx.room.Index
         ForeignKey(
             entity = StoreEntity::class,
             parentColumns = ["id"],
-            childColumns  = ["storeId"],
-            onDelete      = CASCADE
+            childColumns = ["storeId"],
+            onDelete = ForeignKey.CASCADE
         )
     ],
     indices = [Index("storeId")]
@@ -25,5 +25,6 @@ data class ItemEntity(
     val cost: String,
     val description: String,
     val storeId: Long,
-    val imageId: Int
+    val imageId: Int = 0,
+    val imageUri: String? = null
 )
