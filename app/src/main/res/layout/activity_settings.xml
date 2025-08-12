@@ -59,9 +59,7 @@
         android:layout_marginBottom="60dp"
         android:padding="32dp"
         android:layout_gravity="center"
-        android:minHeight="400dp"
-
-        >
+        android:minHeight="400dp">
 
 
         <LinearLayout
@@ -96,14 +94,7 @@
                 android:textColor="#0D47A1"
                 android:layout_marginBottom="12dp" />
 
-            <Button
-                android:id="@+id/changePasswordButton"
-                android:layout_width="match_parent"
-                android:layout_height="61dp"
-                android:layout_marginTop="24dp"
-                android:backgroundTint="#3F51B5"
-                android:text="Change Password"
-                android:textColor="#FFFFFF" />
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
