@@ -1,6 +1,7 @@
 package com.example.binbuddy
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.util.Log
@@ -23,8 +24,21 @@ class ItemDetailActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.itemCost).text = "Cost: $cost"
         findViewById<TextView>(R.id.itemDescription).text = "Description: $description"
 
-        val imageResId = intent.getIntExtra("imageId", R.drawable.ic_launcher_foreground)
-        findViewById<ImageView>(R.id.itemImage).setImageResource(imageResId)
+        val imageUriString = intent.getStringExtra("imageUri")
+        val imageView = findViewById<ImageView>(R.id.itemImage)
+
+        if (!imageUriString.isNullOrEmpty()) {
+            try {
+                val uri = Uri.parse(imageUriString)
+                imageView.setImageURI(uri)
+            } catch (e: Exception) {
+                imageView.setImageResource(R.drawable.ic_launcher_foreground)
+            }
+        } else {
+            val imageResId = intent.getIntExtra("imageId", R.drawable.ic_launcher_foreground)
+            imageView.setImageResource(imageResId)
+        }
+
 
     }
     fun onBackClick(v: View) = onBackPressedDispatcher.onBackPressed()
