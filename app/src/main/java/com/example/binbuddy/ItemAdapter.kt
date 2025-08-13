@@ -1,5 +1,6 @@
 package com.example.binbuddy
 
+import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -29,12 +30,19 @@ class ItemAdapter(
             descriptionText.text = item.description
             itemView.setOnClickListener { onItemClick(item) }
 
-            val imageName = item.imageId
-            if (imageName != 0) {
-                imageView.setImageResource(imageName)
+            if (!item.imageUri.isNullOrEmpty()) {
+                try {
+                    val uri = Uri.parse(item.imageUri)
+                    imageView.setImageURI(uri)
+                } catch (e: Exception) {
+                    imageView.setImageResource(R.drawable.ic_launcher_foreground) // fallback
+                }
+            } else if (item.imageId != 0) {
+                imageView.setImageResource(item.imageId)
             } else {
-                imageView.setImageResource(R.drawable.ic_launcher_foreground) // Optional: fallback image
+                imageView.setImageResource(R.drawable.ic_launcher_foreground)
             }
+
         }
     }
 

@@ -43,7 +43,6 @@ class AdminNavActivity : AppCompatActivity() {
             } catch (_: SecurityException) {
             }
 
-            pickedImageUri = uri
             onImagePicked?.invoke(uri)
         }
     }
@@ -151,7 +150,10 @@ class AdminNavActivity : AppCompatActivity() {
                 pickedImageUri = null
                 ivPreview.setImageDrawable(null)
 
-                onImagePicked = { uri -> ivPreview.setImageURI(uri) }
+                onImagePicked = { uri ->
+                    pickedImageUri = uri
+                    ivPreview.setImageURI(uri)
+                }
 
                 btnPickImage.setOnClickListener {
                     pickImage.launch(arrayOf("image/*"))
