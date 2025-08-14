@@ -6,7 +6,7 @@
     android:orientation="horizontal"
     android:padding="16dp"
     android:layout_marginBottom="12dp"
-    android:background="#1680FB"
+    android:background="#DDEAFE"
     >
 
     <!-- Image on the left -->
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:text="Item Name"
             android:textSize="18sp"
-        android:textColor="#FFFFFF"
+            android:textColor="#0D47A1"
             android:textStyle="bold" />
 
     <!-- Item Location -->
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:text="Location"
             android:textSize="16sp"
-        android:textColor="#FFFFFF"
+            android:textColor="#1565C0"
             android:layout_marginTop="4dp" />
 
     <!-- Item Cost -->
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:text="Cost"
             android:textSize="16sp"
-        android:textColor="#FFFFFF"
+            android:textColor="#1565C0"
             android:layout_marginTop="2dp" />
 
 
@@ -61,9 +61,9 @@
             android:id="@+id/itemDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=""
+            android:text="Description"
             android:textSize="14sp"
-        android:textColor="#0D47A1"
+            android:textColor="#0D47A1"
             android:layout_marginTop="6dp" />
 
     </LinearLayout>
