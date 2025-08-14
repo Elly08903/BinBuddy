@@ -78,6 +78,7 @@ class AdminNavActivity : AppCompatActivity() {
                     putExtra("itemCost", selected.cost)
                     putExtra("itemDescription", selected.description)
                     putExtra("imageId", selected.imageId)
+                    putExtra("imageUri", selected.imageUri)
                 }.also { startActivity(it) }
             }
             recyclerView.adapter = adapter
@@ -179,7 +180,7 @@ class AdminNavActivity : AppCompatActivity() {
                             val newItem = ItemEntity(
                                 title = nameInput.text.toString(),
                                 location = locationInput.text.toString(),
-                                cost = priceInput.text.toString(),
+                                cost = "$${priceInput.text}",
                                 description = descInput.text.toString(),
                                 storeId = selectedStore,
                                 imageId = 0,
