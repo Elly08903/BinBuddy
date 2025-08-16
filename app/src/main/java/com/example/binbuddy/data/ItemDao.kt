@@ -1,7 +1,9 @@
 package com.example.binbuddy.data
 
 import androidx.room.*
-
+/**
+ * DAO for Items.
+ */
 @Dao
 interface ItemDao {
     @Query("SELECT * FROM items ORDER BY title ASC")
@@ -16,6 +18,11 @@ interface ItemDao {
     @Update
     fun update(item: ItemEntity)
 
+
+    /**
+     * Full-text-ish search over title/location/description.
+     * Caller should pass a pattern like "%milk%".
+     */
     @Query("""
     SELECT *
       FROM items

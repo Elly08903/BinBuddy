@@ -7,6 +7,12 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
+/**
+ * Main Room database for the application.
+ * Stores Items, Stores, Users, and Admin-to-Store relationships.
+ * Current version: 10
+ */
+
 @Database(
     entities = [
         ItemEntity::class,
@@ -18,6 +24,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
+    // DAO getters
     abstract fun itemDao(): ItemDao
     abstract fun userDao(): UserDao
     abstract fun storeDao(): StoreDao

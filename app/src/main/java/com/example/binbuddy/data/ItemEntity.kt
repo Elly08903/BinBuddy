@@ -5,7 +5,12 @@ import androidx.room.PrimaryKey
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.Index
-
+/**
+ * ItemEntity represents a single inventory item that belongs to a Store.
+ * - The foreign key enforces that every item references an existing store.
+ * - onDelete = CASCADE means deleting a store will delete all its items.
+ * - Index on storeId speeds up "items by store" queries.
+ */
 @Entity(
     tableName = "items",
     foreignKeys = [
@@ -13,7 +18,7 @@ import androidx.room.Index
             entity = StoreEntity::class,
             parentColumns = ["id"],
             childColumns = ["storeId"],
-            onDelete = ForeignKey.CASCADE
+            onDelete = CASCADE
         )
     ],
     indices = [Index("storeId")]
